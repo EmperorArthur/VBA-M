@@ -49,7 +49,7 @@ void GameArea::LoadGame(const wxString &name)
     wxCharBuffer fnb(fnfn.GetFullPath().mb_fn_str());
     const char *fn = fnb.data();
     char fnbuf[2048];
-    IMAGE_TYPE t = badfile ? IMAGE_UNKNOWN : utilFindType(fn, fnbuf);
+    IMAGE_TYPE t = badfile ? IMAGE_UNKNOWN : utilFindType(fn);
     if(t == IMAGE_UNKNOWN) {
 	wxString s;
 	s.Printf(_("%s is not a valid ROM file"), name.c_str());

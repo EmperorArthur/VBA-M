@@ -321,7 +321,7 @@ void load_opts()
     // instead, translate when presented to user
 
     wxConfig *cfg = wxGetApp().cfg;
-    cfg->SetPath(wxT("/"));
+    cfg->SetPath(wxT("./config"));
 
     // enure there are no unknown options present
     // note that items cannot be deleted until after loop or loop will fail
