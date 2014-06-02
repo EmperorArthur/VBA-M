@@ -72,11 +72,11 @@ static uint32_t joypad[5][SDLBUTTONS_NUM] = {
 };
 
 static uint32_t motion[4] = {
-  SDLK_KP4, SDLK_KP6, SDLK_KP8, SDLK_KP2
+  SDLK_KP_4, SDLK_KP_6, SDLK_KP_8, SDLK_KP_2
 };
 
 static uint32_t defaultMotion[4] = {
-  SDLK_KP4, SDLK_KP6, SDLK_KP8, SDLK_KP2
+  SDLK_KP_4, SDLK_KP_6, SDLK_KP_8, SDLK_KP_2
 };
 
 static int sensorX = 2047;

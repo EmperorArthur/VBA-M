@@ -1139,10 +1139,10 @@ void sdlInitVideo() {
   destWidth = filter_enlarge * srcWidth;
   destHeight = filter_enlarge * srcHeight;
 
-  flags = SDL_ANYFORMAT | (fullscreen ? SDL_FULLSCREEN : 0);
+  flags = SDL_ANYFORMAT | (fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
   if(openGL) {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    flags |= SDL_OPENGL | SDL_RESIZABLE;
+    flags |= SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
   } else
     flags |= SDL_HWSURFACE | SDL_DOUBLEBUF;
 
@@ -1216,8 +1216,8 @@ void sdlInitVideo() {
 	&&	scaledHeight	< desktopHeight
     ) {
         SDL_SetVideoMode(scaledWidth, scaledHeight, 0,
-                       SDL_OPENGL | SDL_RESIZABLE |
-                       (fullscreen ? SDL_FULLSCREEN : 0));
+                       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
+                       (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
         sdlOpenGLInit(scaledWidth, scaledHeight);
 	/* xKiv: it would seem that SDL_RESIZABLE causes the *previous* dimensions to be immediately
 	 * reported back via the SDL_VIDEORESIZE event
@@ -1375,8 +1375,8 @@ void sdlPollEvents()
       if (openGL)
       {
         SDL_SetVideoMode(event.resize.w, event.resize.h, 0,
-                       SDL_OPENGL | SDL_RESIZABLE |
-                       (fullscreen ? SDL_FULLSCREEN : 0));
+                       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
+                       (fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
         sdlOpenGLInit(event.resize.w, event.resize.h);
       }
       break;
