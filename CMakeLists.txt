@@ -8,7 +8,7 @@ if( COMMAND cmake_policy )
 endif( COMMAND cmake_policy )
 SET( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeScripts )
 
-option( ENABLE_SDL "Build the SDL port" ON )
+option( ENABLE_SDL "Build the SDL port" OFF )
 option( ENABLE_GTK "Build the GTK+ GUI" OFF )
 option( ENABLE_WX "Build the wxWidgets port" ON )
 option( ENABLE_DEBUGGER "Enable the debugger" ON )

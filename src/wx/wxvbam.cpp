@@ -36,14 +36,14 @@ static void get_config_path(wxPathList &path, bool exists = true)
 	path.Add(s); \
 } while(0)
     // NOTE: this does not support XDG (freedesktop.org) paths
-    path.Add(wxT("./config"));
-    //add_path(GetUserLocalDataDir());
-    //path.Add(stdp.GetUserConfigDir() + wxT("/.config/gvbam/"));
-    //add_path(GetUserDataDir());
-    //add_path(GetLocalizedResourcesDir(wxGetApp().locale.GetCanonicalName()));
-    //add_path(GetResourcesDir());
-    //add_path(GetDataDir());
-    //add_path(GetLocalDataDir());
+//     path.Add(wxT("./config"));
+    path.Add(stdp.GetUserConfigDir() + wxT("/.config/gvbam/"));
+//     add_path(GetUserLocalDataDir());
+//     add_path(GetUserDataDir());
+//     add_path(GetLocalizedResourcesDir(wxGetApp().locale.GetCanonicalName()));
+//     add_path(GetResourcesDir());
+//     add_path(GetDataDir());
+//     add_path(GetLocalDataDir());
 }
 
 static void tack_full_path(wxString &s, const wxString &app = wxEmptyString)
@@ -52,7 +52,7 @@ static void tack_full_path(wxString &s, const wxString &app = wxEmptyString)
     wxPathList full_config_path;
     get_config_path(full_config_path, false);
     for(int i = 0; i < full_config_path.size(); i++)
-	s += wxT("\n\t") + full_config_path[i] + app;
+        s += wxT("\n\t") + full_config_path[i] + app;
 }
 
 bool wxvbamApp::OnInit()
@@ -124,9 +124,9 @@ bool wxvbamApp::OnInit()
         // at least up to 2.8.12, GetLocalFileName returns the dir if
         // SUBDIR is specified instead of actual file name
         // and SUBDIR only affects UNIX
-    //#if defined(__UNIX__) && !wxCHECK_VERSION(2,9,0)
+    #if defined(__UNIX__) && !wxCHECK_VERSION(2,9,0)
         s.AppendDir(s.GetFullName());
-    //#endif
+    #endif
         // only the path part gets created
         // note that 0777 is default (assumes umask will do og-w)
         s.Mkdir(0777, wxPATH_MKDIR_FULL);
