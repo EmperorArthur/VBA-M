@@ -140,8 +140,6 @@ int textureSize = 256;
 #ifdef USE_OPENGL
 int openGL = 1;
 GLuint screenTexture = 0;
-#else
-int openGL = 0;
 #endif
 u8 *filterPix = 0;
 
@@ -271,13 +269,15 @@ struct option sdlOptions[] = {
   { "no-auto-frameskip", no_argument, &autoFrameSkip, 0 },
   { "no-debug", no_argument, 0, 'N' },
   { "no-patch", no_argument, &sdlAutoPatch, 0 },
-  { "no-opengl", no_argument, &openGL, 0 },
   { "no-pause-when-inactive", no_argument, &pauseWhenInactive, 0 },
   { "no-rtc", no_argument, &sdlRtcEnable, 0 },
   { "no-show-speed", no_argument, &showSpeed, 0 },
-  { "opengl", required_argument, 0, 'O' },
-  { "opengl-nearest", no_argument, &openGL, 1 },
-  { "opengl-bilinear", no_argument, &openGL, 2 },
+  #ifdef USE_OPENGL
+    { "no-opengl", no_argument, &openGL, 0 },
+    { "opengl", required_argument, 0, 'O' },
+    { "opengl-nearest", no_argument, &openGL, 1 },
+    { "opengl-bilinear", no_argument, &openGL, 2 },
+  #endif
   { "pause-when-inactive", no_argument, &pauseWhenInactive, 1 },
   { "profile", optional_argument, 0, 'p' },
   { "rtc", no_argument, &sdlRtcEnable, 1 },
@@ -675,8 +675,12 @@ void sdlReadPreferences(FILE *f)
       inputSetKeymap(PAD_4, KEY_BUTTON_AUTO_A, sdlFromHex(value));
     } else if(!strcmp(key, "Joy3_AutoB")) {
       inputSetKeymap(PAD_4, KEY_BUTTON_AUTO_B, sdlFromHex(value));
-    } else if(!strcmp(key, "openGL")) {
-     openGL = sdlFromHex(value);
+    #ifdef USE_OPENGL
+      } else if(!strcmp(key, "openGL")) {
+        openGL = sdlFromHex(value);
+      } else if(!strcmp(key, "openGLscale")) {
+        sdlOpenglScale = sdlFromHex(value);
+    #endif
     } else if(!strcmp(key, "Motion_Left")) {
       inputSetMotionKeymap(KEY_LEFT, sdlFromHex(value));
     } else if(!strcmp(key, "Motion_Right")) {
@@ -802,8 +806,6 @@ void sdlReadPreferences(FILE *f)
       rewindTimer *= 6;  // convert value to 10 frames multiple
     } else if(!strcmp(key, "saveKeysSwitch")) {
       sdlSaveKeysSwitch = sdlFromHex(value);
-    } else if(!strcmp(key, "openGLscale")) {
-      sdlOpenglScale = sdlFromHex(value);
     } else if(!strcmp(key, "autoFireMaxCount")) {
       autoFireMaxCount = sdlFromDec(value);
       if(autoFireMaxCount < 1)
@@ -814,9 +816,9 @@ void sdlReadPreferences(FILE *f)
   }
 }
 
+#ifdef USE_OPENGL
 void sdlOpenGLInit(int w, int h)
 {
-#ifdef USE_OPENGL
   float screenAspect = (float) srcWidth / srcHeight,
         windowAspect = (float) w / h;
 
@@ -868,8 +870,8 @@ void sdlOpenGLInit(int w, int h)
 
   glClearColor(0.0,0.0,0.0,1.0);
   glClear( GL_COLOR_BUFFER_BIT );
-#endif
 }
+#endif
 
 void sdlReadPreferences()
 {
@@ -1149,16 +1151,21 @@ void sdlInitVideo() {
   destHeight = filter_enlarge * srcHeight;
 
   flags = SDL_ANYFORMAT | (fullscreen ? SDL_FULLSCREEN : 0);
+#ifdef USE_OPENGL
   if(openGL) {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     flags |= SDL_OPENGL | SDL_RESIZABLE;
   } else
+#endif
     flags |= SDL_HWSURFACE | SDL_DOUBLEBUF;
-
+#ifdef USE_OPENGL
   if (fullscreen && openGL) {
     screenWidth = desktopWidth;
     screenHeight = desktopHeight;
-  } else {
+  }
+  else
+#endif
+  {
     screenWidth = destWidth;
     screenHeight = destHeight;
   }
@@ -1172,7 +1179,7 @@ void sdlInitVideo() {
   }
 
   u32 rmask, gmask, bmask;
-  
+#ifdef USE_OPENGL
   if(openGL) {
     #if SDL_BYTEORDER == SDL_LIL_ENDIAN /* OpenGL RGBA masks */
       rmask = 0x000000FF;
@@ -1183,7 +1190,10 @@ void sdlInitVideo() {
       gmask = 0x00FF0000; 
       bmask = 0x0000FF00; 
     #endif
-  } else {
+  }
+#endif
+  else
+  {
       rmask = surface->format->Rmask;
       gmask = surface->format->Gmask;
       bmask = surface->format->Bmask;
@@ -1192,13 +1202,6 @@ void sdlInitVideo() {
   systemRedShift = sdlCalculateShift(rmask);
   systemGreenShift = sdlCalculateShift(gmask);
   systemBlueShift = sdlCalculateShift(bmask);
-  
-  if(openGL) {
-      // Align to BGRA instead of ABGR
-      systemRedShift += 8;
-      systemGreenShift += 8;
-      systemBlueShift += 8;
-  }
 
   systemColorDepth = surface->format->BitsPerPixel;
 
@@ -1211,7 +1214,13 @@ void sdlInitVideo() {
       srcPitch = srcWidth*3;
   }
 
+#ifdef USE_OPENGL
   if(openGL) {
+    // Align to BGRA instead of ABGR
+    systemRedShift += 8;
+    systemGreenShift += 8;
+    systemBlueShift += 8;
+
     int scaledWidth = screenWidth * sdlOpenglScale;
     int scaledHeight = screenHeight * sdlOpenglScale;
 
@@ -1234,6 +1243,7 @@ void sdlInitVideo() {
 	ignore_first_resize_event	= 1;
     }
   }
+#endif
 
 }
 
@@ -1384,6 +1394,7 @@ void sdlPollEvents()
 	      ignore_first_resize_event	= 0;
 	      break;
       }
+      #ifdef USE_OPENGL
       if (openGL)
       {
         SDL_SetVideoMode(event.resize.w, event.resize.h, 0,
@@ -1391,6 +1402,7 @@ void sdlPollEvents()
                        (fullscreen ? SDL_FULLSCREEN : 0));
         sdlOpenGLInit(event.resize.w, event.resize.h);
       }
+      #endif
       break;
     case SDL_ACTIVEEVENT:
       if(pauseWhenInactive && (event.active.state & SDL_APPINPUTFOCUS)) {
@@ -2096,11 +2108,13 @@ int main(int argc, char **argv)
       sdlPrintUsage = 1;
       break;
     case 'O':
+#ifdef USE_OPENGL
       if(optarg) {
        openGL = atoi(optarg);
         if (openGL < 0 || openGL > 2)
          openGL = 1;
      } else
+#endif
         openGL = 0;
     break;
 
@@ -2484,9 +2498,12 @@ void systemDrawScreen()
 
   renderedFrames++;
 
+#ifdef USE_OPENGL
   if (openGL)
     screen = filterPix;
-  else {
+  else
+#endif
+  {
     screen = (u8*)surface->pixels;
     SDL_LockSurface(surface);
   }
@@ -2502,8 +2519,8 @@ void systemDrawScreen()
   if (showSpeed && fullscreen)
     drawSpeed(screen, destPitch, 10, 20);
 
-  if (openGL) {
 #ifdef USE_OPENGL
+  if (openGL) {
     glClear( GL_COLOR_BUFFER_BIT );
     glPixelStorei(GL_UNPACK_ROW_LENGTH, destWidth);
     if (systemColorDepth == 16)
@@ -2526,8 +2543,10 @@ void systemDrawScreen()
     glEnd();
 
     SDL_GL_SwapBuffers();
+  }
+  else
 #endif
-  } else {
+  {
     SDL_UnlockSurface(surface);
     SDL_Flip(surface);
   }
