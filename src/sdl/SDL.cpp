@@ -27,8 +27,12 @@
     #include <OpenGL/glu.h>
     #include <OpenGL/glext.h>
 #else
-    #include <GL/glu.h>
-    #include <GL/glext.h>
+    #include <GLES3/gl3.h>
+    #include <GLES3/gl3ext.h>
+    #include <GLES3/gl3platform.h>
+    #include <GLES3/gl31.h>
+    #define  GL_BGRA                 0x80E1
+    #define GL_UNSIGNED_INT_8_8_8_8         0x8035
 #endif
 
 #include <time.h>
@@ -828,13 +832,13 @@ void sdlOpenGLInit(int w, int h)
     glViewport((w - width) / 2, 0, width, h);
   }
 
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
+//   glMatrixMode(GL_PROJECTION);
+//   glLoadIdentity();
 
-  glOrtho(0.0, 1.0, 1.0, 0.0, 0.0, 1.0);
+//   glOrtho(0.0, 1.0, 1.0, 0.0, 0.0, 1.0);
 
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
+//   glMatrixMode(GL_MODELVIEW);
+//   glLoadIdentity();
 
   glGenTextures(1, &screenTexture);
   glBindTexture(GL_TEXTURE_2D, screenTexture);
