@@ -42,4 +42,3 @@ Description: Nintendo Game Boy Advance emulator (wxWidgets frontend)
  handhelds and its Super and Color variants.
  .
  This package provides the wxWidgets GUI version of VisualBoyAdvance-M.
-
