@@ -65,22 +65,12 @@
                   <object class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkRadioButton" id="OutputOpenGL">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">OpenGL</property>
-                        <property name="active">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkRadioButton" id="OutputCairo">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="label" translatable="yes">Cairo</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
-                        <property name="group">OutputOpenGL</property>
                       </object>
                       <packing>
                         <property name="position">1</property>

@@ -64,7 +64,7 @@ protected:
   bool     m_bEnableRender;
 
   bool             m_bShowCursor;
-  Gdk::Cursor *    m_poEmptyCursor;
+  Glib::RefPtr<Gdk::Cursor>    m_poEmptyCursor;
   sigc::connection m_oCursorSig;
 
   void vUpdateSize();

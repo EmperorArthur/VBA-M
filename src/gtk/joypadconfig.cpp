@@ -46,7 +46,7 @@ const JoypadConfigDialog::SJoypadKey JoypadConfigDialog::m_astKeys[] =
 };
 
 JoypadConfigDialog::JoypadConfigDialog(Config::Section * _poConfig) :
-  Gtk::Dialog(_("Joypad config"), true, true),
+  Gtk::Dialog(_("Joypad config"), true),
   m_oTitleHBox(false, 5),
   m_oTitleLabel(_("Joypad :"), Gtk::ALIGN_RIGHT),
   m_oDefaultJoypad(_("Default joypad")),
@@ -68,7 +68,7 @@ JoypadConfigDialog::JoypadConfigDialog(Config::Section * _poConfig) :
   // Joypad buttons
   for (guint i = 0; i < G_N_ELEMENTS(m_astKeys); i++)
   {
-    Gtk::Label * poLabel = Gtk::manage( new Gtk::Label(gettext(m_astKeys[i].m_csKeyName), Gtk::ALIGN_RIGHT) );
+    Gtk::Label * poLabel = Gtk::manage( new Gtk::Label(gettext(m_astKeys[i].m_csKeyName), Gtk::ALIGN_END) );
     Gtk::Entry * poEntry = Gtk::manage( new Gtk::Entry() );
     m_oTable.attach(* poLabel, 0, 1, i, i + 1);
     m_oTable.attach(* poEntry, 1, 2, i, i + 1);

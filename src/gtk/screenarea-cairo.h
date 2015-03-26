@@ -33,7 +33,7 @@ public:
   void vDrawBlackScreen();
 
 protected:
-  bool on_expose_event(GdkEventExpose * _pstEvent);
+  bool on_draw(const Cairo::RefPtr<Cairo::Context> &poContext);
   void vOnWidgetResize();
 
 private:
