@@ -236,8 +236,8 @@ Window::Window(GtkWindow * _pstWindow, const Glib::RefPtr<Gtk::Builder> & _poXml
   //
   m_poRecentManager = Gtk::RecentManager::get_default();
 
-  Gtk::RecentFilter oRecentFilter;
-  oRecentFilter.add_application( Glib::get_application_name() );
+  Glib::RefPtr<Gtk::RecentFilter> oRecentFilter = Gtk::RecentFilter::create();
+  oRecentFilter->add_application( Glib::get_application_name() );
 
   m_poRecentChooserMenu = Gtk::manage( new Gtk::RecentChooserMenu(m_poRecentManager) );
   m_poRecentChooserMenu->set_show_numbers();
@@ -458,22 +458,22 @@ void Window::vInitSDL()
     abort();
   }
 
-  inputSetKeymap(PAD_DEFAULT, KEY_LEFT, GDK_Left);
-  inputSetKeymap(PAD_DEFAULT, KEY_RIGHT, GDK_Right);
-  inputSetKeymap(PAD_DEFAULT, KEY_UP, GDK_Up);
-  inputSetKeymap(PAD_DEFAULT, KEY_DOWN, GDK_Down);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_A, GDK_z);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_B, GDK_x);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_START, GDK_Return);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_SELECT, GDK_BackSpace);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_L, GDK_a);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_R, GDK_s);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_SPEED, GDK_space);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_SAVE_OLDEST, GDK_k);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_LOAD_RECENT, GDK_l);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_CAPTURE, GDK_F12);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_AUTO_A, GDK_q);
-  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_AUTO_B, GDK_w);
+  inputSetKeymap(PAD_DEFAULT, KEY_LEFT, GDK_KEY_Left);
+  inputSetKeymap(PAD_DEFAULT, KEY_RIGHT, GDK_KEY_Right);
+  inputSetKeymap(PAD_DEFAULT, KEY_UP, GDK_KEY_Up);
+  inputSetKeymap(PAD_DEFAULT, KEY_DOWN, GDK_KEY_Down);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_A, GDK_KEY_z);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_B, GDK_KEY_x);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_START, GDK_KEY_Return);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_SELECT, GDK_KEY_BackSpace);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_L, GDK_KEY_a);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_R, GDK_KEY_s);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_SPEED, GDK_KEY_space);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_SAVE_OLDEST, GDK_KEY_k);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_LOAD_RECENT, GDK_KEY_l);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_CAPTURE, GDK_KEY_F12);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_AUTO_A, GDK_KEY_q);
+  inputSetKeymap(PAD_DEFAULT, KEY_BUTTON_AUTO_B, GDK_KEY_w);
 
   // TODO : remove
   int sdlNumDevices = SDL_NumJoysticks();
@@ -1291,25 +1291,25 @@ void Window::vCreateFileOpenDialog()
     "*.7[zZ]",
   };
 
-  Gtk::FileFilter oAllGBAFilter;
-  oAllGBAFilter.set_name(_("All Gameboy Advance files"));
+  const Glib::RefPtr<Gtk::FileFilter> oAllGBAFilter = Gtk::FileFilter::create();
+  oAllGBAFilter->set_name(_("All Gameboy Advance files"));
   for (guint i = 0; i < G_N_ELEMENTS(acsPattern); i++)
   {
-    oAllGBAFilter.add_pattern(acsPattern[i]);
+    oAllGBAFilter->add_pattern(acsPattern[i]);
   }
 
-  Gtk::FileFilter oGBAFilter;
-  oGBAFilter.set_name(_("Gameboy Advance files"));
+  const Glib::RefPtr<Gtk::FileFilter> oGBAFilter = Gtk::FileFilter::create();
+  oGBAFilter->set_name(_("Gameboy Advance files"));
   for (int i = 0; i < 3; i++)
   {
-    oGBAFilter.add_pattern(acsPattern[i]);
+    oGBAFilter->add_pattern(acsPattern[i]);
   }
 
-  Gtk::FileFilter oGBFilter;
-  oGBFilter.set_name(_("Gameboy files"));
+  const Glib::RefPtr<Gtk::FileFilter> oGBFilter = Gtk::FileFilter::create();
+  oGBFilter->set_name(_("Gameboy files"));
   for (int i = 3; i < 7; i++)
   {
-    oGBFilter.add_pattern(acsPattern[i]);
+    oGBFilter->add_pattern(acsPattern[i]);
   }
 
   poDialog->add_filter(oAllGBAFilter);
