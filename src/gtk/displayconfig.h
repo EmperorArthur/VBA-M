@@ -48,7 +48,6 @@ private:
   Gtk::ComboBox *           m_poFiltersComboBox;
   Gtk::ComboBox *           m_poIBFiltersComboBox;
   Gtk::ComboBox *           m_poDefaultScaleComboBox;
-  Gtk::RadioButton *        m_poOutputOpenGLRadioButton;
   Gtk::RadioButton *        m_poOutputCairoRadioButton;
 };
 

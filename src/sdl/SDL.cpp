@@ -103,7 +103,7 @@ struct EmulatedSystem emulator = {
   0
 };
 
-SDL_Surface *surface = NULL;
+static SDL_Surface *surface = NULL;
 
 int systemSpeed = 0;
 int systemRedShift = 0;
@@ -193,7 +193,6 @@ extern int autoFireMaxCount;
 
 #define REWIND_NUM 8
 #define REWIND_SIZE 400000
-#define SYSMSG_BUFFER_SIZE 1024
 
 #define _stricmp strcasecmp
 
@@ -996,7 +995,7 @@ static char * sdlStateName(int num)
   return stateName;
 }
 
-void sdlWriteState(int num)
+static void sdlWriteState(int num)
 {
   char * stateName;
 
@@ -1020,7 +1019,7 @@ void sdlWriteState(int num)
   systemDrawScreen();
 }
 
-void sdlReadState(int num)
+static void sdlReadState(int num)
 {
   char * stateName;
 
@@ -1089,7 +1088,7 @@ void sdlWriteBackupStateExchange(int from, int to, int backup)
   free(stateNameBack);
 }
 
-void sdlWriteBattery()
+static void sdlWriteBattery()
 {
   char buffer[1048];
 
@@ -1105,7 +1104,7 @@ void sdlWriteBattery()
   systemScreenMessage("Wrote battery");
 }
 
-void sdlReadBattery()
+static void sdlReadBattery()
 {
   char buffer[1048];
 
@@ -1130,7 +1129,7 @@ void sdlReadDesktopVideoMode() {
   desktopHeight = vInfo->current_h;
 }
 
-void sdlInitVideo() {
+static void sdlInitVideo() {
   int flags;
   int screenWidth;
   int screenHeight;
@@ -1359,7 +1358,7 @@ static void sdlHandleSavestateKey(int num, int shifted)
 
 } // sdlHandleSavestateKey
 
-void sdlPollEvents()
+static void sdlPollEvents()
 {
   SDL_Event event;
   while(SDL_PollEvent(&event)) {
@@ -2127,12 +2126,6 @@ int main(int argc, char **argv)
 
   if(optind < argc) {
     char *szFile = argv[optind];
-    u32 len = strlen(szFile);
-    if (len > SYSMSG_BUFFER_SIZE)
-    {
-      fprintf(stderr,"%s :%s: File name too long\n",argv[0],szFile);
-      exit(-1);
-    }
 
     utilStripDoubleExtension(szFile, filename);
     char *p = strrchr(filename, '.');
@@ -2408,31 +2401,17 @@ int main(int argc, char **argv)
   return 0;
 }
 
-
-
-
-#ifdef __WIN32__
-extern "C" {
-  int WinMain()
-  {
-    return(main(__argc, __argv));
-  }
-}
-#endif
-
 void systemMessage(int num, const char *msg, ...)
 {
-  char buffer[SYSMSG_BUFFER_SIZE*2];
   va_list valist;
 
   va_start(valist, msg);
-  vsprintf(buffer, msg, valist);
-
-  fprintf(stderr, "%s\n", buffer);
+  vfprintf(stderr, msg, valist);
+  fprintf(stderr, "\n");
   va_end(valist);
 }
 
-void drawScreenMessage(u8 *screen, int pitch, int x, int y, unsigned int duration)
+static void drawScreenMessage(u8 *screen, int pitch, int x, int y, unsigned int duration)
 {
   if(screenMessage) {
     if(cartridgeType == 1 && gbBorderOn) {
@@ -2448,7 +2427,7 @@ void drawScreenMessage(u8 *screen, int pitch, int x, int y, unsigned int duratio
   }
 }
 
-void drawSpeed(u8 *screen, int pitch, int x, int y)
+static void drawSpeed(u8 *screen, int pitch, int x, int y)
 {
   char buffer[50];
   if(showSpeed == 1)

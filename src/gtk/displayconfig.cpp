@@ -36,13 +36,11 @@ DisplayConfigDialog::DisplayConfigDialog(GtkDialog* _pstDialog, const Glib::RefP
   refBuilder->get_widget("FiltersComboBox", m_poFiltersComboBox);
   refBuilder->get_widget("IBFiltersComboBox", m_poIBFiltersComboBox);
   refBuilder->get_widget("DefaultScaleComboBox", m_poDefaultScaleComboBox);
-  refBuilder->get_widget("OutputOpenGL", m_poOutputOpenGLRadioButton);
   refBuilder->get_widget("OutputCairo", m_poOutputCairoRadioButton);
 
   m_poFiltersComboBox->signal_changed().connect(sigc::mem_fun(*this, &DisplayConfigDialog::vOnFilterChanged));
   m_poIBFiltersComboBox->signal_changed().connect(sigc::mem_fun(*this, &DisplayConfigDialog::vOnFilterIBChanged));
   m_poDefaultScaleComboBox->signal_changed().connect(sigc::mem_fun(*this, &DisplayConfigDialog::vOnScaleChanged));
-  m_poOutputOpenGLRadioButton->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &DisplayConfigDialog::vOnOutputChanged), VBA::Window::OutputOpenGL));
   m_poOutputCairoRadioButton->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &DisplayConfigDialog::vOnOutputChanged), VBA::Window::OutputCairo));
 
 
@@ -85,9 +83,6 @@ void DisplayConfigDialog::vSetConfig(Config::Section * _poConfig, VBA::Window * 
   VBA::Window::EVideoOutput _eOutput = (VBA::Window::EVideoOutput)m_poConfig->oGetKey<int>("output");
   switch (_eOutput)
   {
-    case VBA::Window::OutputOpenGL:
-      m_poOutputOpenGLRadioButton->set_active();
-      break;
     default:
       m_poOutputCairoRadioButton->set_active();
       break;
@@ -121,11 +116,7 @@ void DisplayConfigDialog::vOnOutputChanged(VBA::Window::EVideoOutput _eOutput)
   if (_eOutput == eOldOutput)
     return;
   
-  if (_eOutput == VBA::Window::OutputOpenGL && m_poOutputOpenGLRadioButton->get_active())
-  {
-    m_poConfig->vSetKey("output", VBA::Window::OutputOpenGL);
-    m_poWindow->vApplyConfigScreenArea();
-  } else if (_eOutput == VBA::Window::OutputCairo && m_poOutputCairoRadioButton->get_active())
+  if (_eOutput == VBA::Window::OutputCairo && m_poOutputCairoRadioButton->get_active())
   {
     m_poConfig->vSetKey("output", VBA::Window::OutputCairo);
     m_poWindow->vApplyConfigScreenArea();
