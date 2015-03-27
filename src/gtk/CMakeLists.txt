@@ -7,7 +7,6 @@ FIND_PACKAGE ( Gettext REQUIRED )
 
 # These dependencies require pkg-config to be found
 PKG_CHECK_MODULES ( GTKMM REQUIRED gtkmm-3.0 )
-PKG_CHECK_MODULES ( GDKMM REQUIRED gdkmm-2.4 )
 PKG_CHECK_MODULES ( GLIBMM REQUIRED glibmm-2.4 )
 PKG_CHECK_MODULES ( GIOMM REQUIRED giomm-2.4 )
 
